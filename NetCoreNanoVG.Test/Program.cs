@@ -60,12 +60,15 @@ namespace NetCoreNanoVG.Test
             int y = 0;
 
             // Widgets
-            DrawWindow(vg, "Widgets বাংলা দেশী Stuff", 50, 50, 400, 400);
+            DrawWindow(vg, "Widgets বাংলা দেশী Stuff", 50, 50, 300, 400);
             x = 60;
             y = 95;
             DrawSearchBox(vg, "Search ", x, y, 280, 25);
 
             DrawColorWheel(vg, 300, 150, 400, 400, 1);
+
+            drawLabel(vg, "OMG Label", 100, 400, 200, 200);
+            drawDropDown(vg, "My Dropdown", 100, 420, 200, 25);
         }
 
         const int ICON_SEARCH = 0x1F50D;
@@ -316,6 +319,48 @@ namespace NetCoreNanoVG.Test
             NVG.Restore(vg);
         }
 
-        //*/
+        static void drawLabel(NanoVGContext vg, string text, float x, float y, float w, float h)
+        {
+
+            //NVG_NOTUSED(w);
+
+            NVG.FontSize(vg, 18.0f);
+            NVG.FontFace(vg, "sans");
+            NVG.FillColor(vg, NVG.RGBA(255,255,255,128));
+
+	        NVG.TextAlign(vg, NVGAlign.NVG_ALIGN_LEFT|NVGAlign.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x, y+h*0.5f, text,null);
+        }
+
+        static void drawDropDown(NanoVGContext vg, string text, float x, float y, float w, float h)
+        {
+            NVGPaint bg;
+            const int icon = 0x2713;
+            float cornerRadius = 4.0f;
+
+            bg = NVG.LinearGradient(vg, x, y, x, y + h, NVG.RGBA(255, 255, 255, 16), NVG.RGBA(0, 0, 0, 16));
+            NVG.BeginPath(vg);
+                NVG.RoundedRect(vg, x + 1, y + 1, w - 2, h - 2, cornerRadius - 1);
+            NVG.FillPaint(vg, bg);
+            NVG.Fill(vg);
+
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, cornerRadius - 0.5f);
+            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 48));
+            NVG.Stroke(vg);
+
+            NVG.FontSize(vg, 20.0f);
+            NVG.FontFace(vg, "sans");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 160));
+            NVG.TextAlign(vg, NVGAlign.NVG_ALIGN_LEFT | NVGAlign.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + h* 0.3f, y + h* 0.5f, text, null);
+
+            NVG.FontSize(vg, h* 1.3f);
+            NVG.FontFace(vg, "icons");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
+            NVG.TextAlign(vg, NVGAlign.NVG_ALIGN_CENTER | NVGAlign.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + w - h* 0.5f, y + h* 0.5f, cpToUTF8(icon), null);
+        } 
+    
     }
 }
