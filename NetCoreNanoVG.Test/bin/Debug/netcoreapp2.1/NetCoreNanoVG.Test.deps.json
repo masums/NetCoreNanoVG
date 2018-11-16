@@ -1,0 +1,50 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.1",
+    "signature": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.1": {
+      "NetCoreNanoVG.Test/1.0.0": {
+        "dependencies": {
+          "NetCoreNanoVG": "1.0.0",
+          "NetCoreGlfw": "1.0.0.0"
+        },
+        "runtime": {
+          "NetCoreNanoVG.Test.dll": {}
+        }
+      },
+      "NetCoreNanoVG/1.0.0": {
+        "runtime": {
+          "NetCoreNanoVG.dll": {}
+        }
+      },
+      "NetCoreGlfw/1.0.0.0": {
+        "runtime": {
+          "NetCoreGlfw.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "NetCoreNanoVG.Test/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NetCoreNanoVG/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NetCoreGlfw/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

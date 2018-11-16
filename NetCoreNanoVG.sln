@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCoreNanoVG", "NetCoreNanoVG\NetCoreNanoVG.csproj", "{D967B6B1-1D73-47EE-A247-EF20F6E1FF50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCoreNanoVG.Test", "NetCoreNanoVG.Test\NetCoreNanoVG.Test.csproj", "{C7B39942-4085-4B7B-851A-1DDFF9E5EC99}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D967B6B1-1D73-47EE-A247-EF20F6E1FF50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D967B6B1-1D73-47EE-A247-EF20F6E1FF50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D967B6B1-1D73-47EE-A247-EF20F6E1FF50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D967B6B1-1D73-47EE-A247-EF20F6E1FF50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7B39942-4085-4B7B-851A-1DDFF9E5EC99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7B39942-4085-4B7B-851A-1DDFF9E5EC99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7B39942-4085-4B7B-851A-1DDFF9E5EC99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7B39942-4085-4B7B-851A-1DDFF9E5EC99}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3F327F0C-54E3-43BF-AE61-310C4D2F37F2}
+	EndGlobalSection
+EndGlobal

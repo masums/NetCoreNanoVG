@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.1",
+    "signature": "432e0d5e16ae693c7e52f82238461c652cf6cd8e"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.1": {
+      "NetCoreGlfw/1.0.0": {
+        "dependencies": {
+          "OpenGL.Net": "0.7.1"
+        },
+        "runtime": {
+          "NetCoreGlfw.dll": {}
+        }
+      },
+      "OpenGL.Net/0.7.1": {
+        "runtime": {
+          "lib/netcoreapp2.0/OpenGL.Net.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "NetCoreGlfw/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "OpenGL.Net/0.7.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-5XNYStjVWRDecXSKFdcsTce0Tghkc1XU/ONkdpJ+PB/dDw+4pnQsEDDqbrlsOEHbVLpomVrEcC0zwFyTlr5BrQ==",
+      "path": "opengl.net/0.7.1",
+      "hashPath": "opengl.net.0.7.1.nupkg.sha512"
+    }
+  }
+}
