@@ -1,7 +1,10 @@
 ﻿using Glfw3;
 using NanoVG;
 using System;
+using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Text;
+using NVGColor = System.Numerics.Vector4;
 
 namespace NetCoreNanoVG.Test
 {
@@ -59,16 +62,25 @@ namespace NetCoreNanoVG.Test
             int x = 0;
             int y = 0;
 
-            // Widgets
-            DrawWindow(vg, "Widgets বাংলা দেশী Stuff", 50, 50, 300, 400);
             x = 60;
             y = 95;
-            DrawSearchBox(vg, "Search ", x, y, 280, 25);
 
-            DrawColorWheel(vg, 300, 150, 400, 400, 1);
+            // Widgets
 
-            drawLabel(vg, "OMG Label", 100, 400, 200, 200);
-            drawDropDown(vg, "My Dropdown", 100, 420, 200, 25);
+            DrawColorWheel(vg, 400, 150, 200, 200, 1);
+
+            DrawWindow(vg, "Left Widgets Stuff", 50, 50, 300, 600);
+
+            DrawSearchBox(vg, "Search ", x, y, 200, 25);
+
+            drawLabel(vg, "OMG Label", x, 120, 200, 50);
+            drawDropDown(vg, "My Dropdown", x, 170, 200, 25);
+            DrawEditBox(vg, "Edit Text", x, 200, 200, 30);
+            DrawEditBoxNum(vg, "0123455", new byte[] { 1 }, x, 240, 200, 30);
+            DrawCheckBox(vg, "Check 1", x, 280, 200, 20);
+            DrawButton(vg, 1, "Click me!", x, 300, 200, 30, NVG.RGB(10,10,10));
+
+            DrawWindow(vg, "Right Widgets", 650, 50, 300, 600);
         }
 
         const int ICON_SEARCH = 0x1F50D;
@@ -77,6 +89,15 @@ namespace NetCoreNanoVG.Test
         const int ICON_CHECK = 0x2713;
         const int ICON_LOGIN = 0xE740;
         const int ICON_TRASH = 0xE729;
+
+        static bool isBlack(NVGColor col)
+        {
+            if (col.X == 0.0f && col.Y == 0.0f && col.Z == 0.0f && col.W == 0.0f)
+            {
+                return true;
+            }
+            return false;
+        }
 
         static byte[] cpToUTF8(int cp)
         {
@@ -326,10 +347,10 @@ namespace NetCoreNanoVG.Test
 
             NVG.FontSize(vg, 18.0f);
             NVG.FontFace(vg, "sans");
-            NVG.FillColor(vg, NVG.RGBA(255,255,255,128));
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 128));
 
-	        NVG.TextAlign(vg, NVGAlign.NVG_ALIGN_LEFT|NVGAlign.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x, y+h*0.5f, text,null);
+            NVG.TextAlign(vg, NVGAlign.NVG_ALIGN_LEFT | NVGAlign.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x, y + h * 0.5f, text, null);
         }
 
         static void drawDropDown(NanoVGContext vg, string text, float x, float y, float w, float h)
@@ -340,7 +361,7 @@ namespace NetCoreNanoVG.Test
 
             bg = NVG.LinearGradient(vg, x, y, x, y + h, NVG.RGBA(255, 255, 255, 16), NVG.RGBA(0, 0, 0, 16));
             NVG.BeginPath(vg);
-                NVG.RoundedRect(vg, x + 1, y + 1, w - 2, h - 2, cornerRadius - 1);
+            NVG.RoundedRect(vg, x + 1, y + 1, w - 2, h - 2, cornerRadius - 1);
             NVG.FillPaint(vg, bg);
             NVG.Fill(vg);
 
@@ -353,14 +374,141 @@ namespace NetCoreNanoVG.Test
             NVG.FontFace(vg, "sans");
             NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 160));
             NVG.TextAlign(vg, NVGAlign.NVG_ALIGN_LEFT | NVGAlign.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + h* 0.3f, y + h* 0.5f, text, null);
+            NVG.Text(vg, x + h * 0.3f, y + h * 0.5f, text, null);
 
-            NVG.FontSize(vg, h* 1.3f);
+            NVG.FontSize(vg, h * 1.3f);
             NVG.FontFace(vg, "icons");
             NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
             NVG.TextAlign(vg, NVGAlign.NVG_ALIGN_CENTER | NVGAlign.NVG_ALIGN_MIDDLE);
-            NVG.Text(vg, x + w - h* 0.5f, y + h* 0.5f, cpToUTF8(icon), null);
-        } 
-    
+            NVG.Text(vg, x + w - h * 0.5f, y + h * 0.5f, cpToUTF8(icon), null);
+        }
+
+        static void DrawEditBoxBase(NanoVGContext vg, float x, float y, float w, float h)
+        {
+            NVGPaint bg;
+            // Edit
+            bg = NVG.BoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, NVG.RGBA(255, 255, 255, 32), NVG.RGBA(32, 32, 32, 32));
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
+            NVG.FillPaint(vg, bg);
+            NVG.Fill(vg);
+
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
+            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 48));
+            NVG.Stroke(vg);
+        }
+
+        static void DrawEditBox(NanoVGContext vg, string text, float x, float y, float w, float h)
+        {
+
+            DrawEditBoxBase(vg, x, y, w, h);
+
+            NVG.FontSize(vg, 20.0f);
+            NVG.FontFace(vg, "sans");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
+            NVG.TextAlign(vg, NVGAlign.NVG_ALIGN_LEFT | NVGAlign.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + h * 0.3f, y + h * 0.5f, text, null);
+        }
+
+        static unsafe void DrawEditBoxNum(NanoVGContext vg, string text, byte[] units, float x, float y, float w, float h)
+        {
+            float uw;
+
+            DrawEditBoxBase(vg, x, y, w, h);
+
+            uw = NVG.TextBounds(vg, 0, 0, units, null, null);
+
+            NVG.FontSize(vg, 18.0f);
+            NVG.FontFace(vg, "sans");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 64));
+            NVG.TextAlign(vg, NVGAlign.NVG_ALIGN_RIGHT | NVGAlign.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + w - h * 0.3f, y + h * 0.5f, units, null);
+
+            NVG.FontSize(vg, 20.0f);
+            NVG.FontFace(vg, "sans");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 128));
+            NVG.TextAlign(vg, NVGAlign.NVG_ALIGN_RIGHT | NVGAlign.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + w - uw - h * 0.5f, y + h * 0.5f, text, null);
+        }
+
+        static void DrawCheckBox(NanoVGContext vg, string text, float x, float y, float w, float h)
+        {
+            NVGPaint bg;
+            int icon = 0x2713;
+            //NVG_NOTUSED(w);
+
+            NVG.FontSize(vg, 18.0f);
+            NVG.FontFace(vg, "sans");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 160));
+
+            NVG.TextAlign(vg, NVGAlign.NVG_ALIGN_LEFT | NVGAlign.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + 28, y + h * 0.5f, text, null);
+
+            bg = NVG.BoxGradient(vg, x + 1, y + (int)(h * 0.5f) - 9 + 1, 18, 18, 3, 3, NVG.RGBA(0, 0, 0, 32), NVG.RGBA(0, 0, 0, 92));
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + 1, y + (int)(h * 0.5f) - 9, 18, 18, 3);
+            NVG.FillPaint(vg, bg);
+            NVG.Fill(vg);
+
+            NVG.FontSize(vg, 40);
+            NVG.FontFace(vg, "icons");
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 128));
+            NVG.TextAlign(vg, NVGAlign.NVG_ALIGN_CENTER | NVGAlign.NVG_ALIGN_MIDDLE);
+            NVG.Text(vg, x + 9 + 2, y + h * 0.5f, cpToUTF8(icon), null);
+        }
+
+        static unsafe void DrawButton(NanoVGContext vg, int preicon, string text, float x, float y, float w, float h, NVGColor col)
+        {
+            
+            NVGPaint bg;
+            int icon = 0xE740;
+            float cornerRadius = 4.0f;
+            float tw = 0, iw = 0;
+
+            bg = NVG.LinearGradient(vg, x, y, x, y + h, NVG.RGBA(255, 255, 255, isBlack(col) ? (byte)16 : (byte)32), NVG.RGBA(0, 0, 0, isBlack(col) ? (byte)16 : (byte)32));
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + 1, y + 1, w - 2, h - 2, cornerRadius - 1);
+            if (!isBlack(col))
+            {
+                NVG.FillColor(vg, col);
+                NVG.Fill(vg);
+            }
+            NVG.FillPaint(vg, bg);
+            NVG.Fill(vg);
+
+            NVG.BeginPath(vg);
+            NVG.RoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, cornerRadius - 0.5f);
+            NVG.StrokeColor(vg, NVG.RGBA(0, 0, 0, 48));
+            NVG.Stroke(vg);
+
+            NVG.FontSize(vg, 20.0f);
+            NVG.FontFace(vg, "sans-bold");
+            tw = NVG.TextBounds(vg, 0, 0, Encoding.UTF8.GetBytes(text), null, null);
+            if (preicon != 0)
+            {
+                NVG.FontSize(vg, h * 1.3f);
+                NVG.FontFace(vg, "icons");
+                iw = NVG.TextBounds(vg, 0, 0, cpToUTF8(icon), null, null);
+                iw += h * 0.15f;
+            }
+
+            if (preicon != 0)
+            {
+                NVG.FontSize(vg, h * 1.3f);
+                NVG.FontFace(vg, "icons");
+                NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 96));
+                NVG.TextAlign(vg, NVGAlign.NVG_ALIGN_LEFT | NVGAlign.NVG_ALIGN_MIDDLE);
+                NVG.Text(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f, cpToUTF8(icon), null);
+            }
+
+            NVG.FontSize(vg, 20.0f);
+            NVG.FontFace(vg, "sans-bold");
+            NVG.TextAlign(vg, NVGAlign.NVG_ALIGN_LEFT | NVGAlign.NVG_ALIGN_MIDDLE);
+            NVG.FillColor(vg, NVG.RGBA(0, 0, 0, 160));
+            NVG.Text(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f - 1, text, null);
+            NVG.FillColor(vg, NVG.RGBA(255, 255, 255, 160));
+            NVG.Text(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, text, null);
+        }
     }
 }
