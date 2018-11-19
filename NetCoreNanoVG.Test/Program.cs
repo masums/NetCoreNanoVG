@@ -1004,7 +1004,7 @@ namespace NetCoreNanoVG.Test
             IntPtr rowPtr = NVG.GetIntPtrFromStructArray(rows);
             //GCHandle gch = GCHandle.Alloc(rows, GCHandleType.Normal);
             //IntPtr rowPtr = GCHandle.ToIntPtr(gch);
-            nrows = NVG.TextBreakLines(vg, Encoding.UTF8.GetBytes(start), Encoding.UTF8.GetBytes(end), width, rowPtr, 3);
+            nrows = NVG.TextBreakLines(vg, Encoding.UTF8.GetBytes(start), Encoding.UTF8.GetBytes(end), width, ref rowPtr, 3);
 
             var cRows = NVG.GetStructArrayFromIntPtr<NVGtextRow>(rowPtr, nrows); 
 

@@ -72,7 +72,7 @@ namespace NanoVG {
     };
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct NVGtextRow
+    public unsafe struct NVGtextRow
     {
         [MarshalAs(UnmanagedType.LPStr, SizeConst =256)]
         public string start;  // Pointer to the input text where the row starts.

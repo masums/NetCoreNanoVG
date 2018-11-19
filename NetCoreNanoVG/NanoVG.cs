@@ -339,7 +339,7 @@ namespace NanoVG {
 		public static extern void TextMetrics(this NanoVGContext Ctx, float* ascender, float* descender, float* lineh);
 
 		[DllImport(LibName, CallingConvention = CConv, EntryPoint = FuncPrefix + nameof(TextBreakLines))]
-		public static extern int TextBreakLines(this NanoVGContext Ctx, byte[] Str, byte[] end, float breakRowWidth, IntPtr rows, int maxRows);
+		public static unsafe extern int TextBreakLines(this NanoVGContext Ctx, byte[] Str, byte[] end, float breakRowWidth, ref IntPtr rows, int maxRows);
 
         #endregion
 
