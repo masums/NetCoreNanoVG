@@ -63,7 +63,29 @@ namespace NanoVG {
 		public IntPtr renderDelete;
 	}
 
-	[StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct NVGglyphPosition
+    {
+        public string str;    // Position of the glyph in the input string.
+        public float x;            // The x-coordinate of the logical glyph position.
+        public float minx, maxx;   // The bounds of the glyph shape.
+    };
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct NVGtextRow
+    {
+        [MarshalAs(UnmanagedType.LPStr, SizeConst =256)]
+        public string start;  // Pointer to the input text where the row starts.
+        [MarshalAs(UnmanagedType.LPStr, SizeConst = 256)]
+        public string end;    // Pointer to the input text where the row ends (one past the last character).
+        [MarshalAs(UnmanagedType.LPStr, SizeConst = 256)]
+        public string next;   // Pointer to the beginning of the next row.
+
+        public float width;        // Logical width of the row.
+        public float minx, maxx;   // Actual bounds of the row. Logical with and bounds can differ because of kerning and some parts over extending.
+    };
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct NVGCompositeOpState {
 		public int SrcRGB;
 		public int DstRGB;
@@ -153,7 +175,16 @@ namespace NanoVG {
 		NVG_CW = 2,             // Winding for holes
 	}
 
-	public unsafe abstract class NVGParameters {
+    public enum NVGlineCap : int
+    { 
+        NVG_BUTT=1,
+        NVG_ROUND,
+        NVG_SQUARE,
+        NVG_BEVEL,
+        NVG_MITER, 
+    }
+
+    public unsafe abstract class NVGParameters {
 		public abstract int RenderCreate(IntPtr UPtr);
 		public abstract int RenderCreateTexture(IntPtr UPtr, int Type, int W, int H, NVGImageFlags ImageFlags, IntPtr Data);
 		public abstract int RenderDeleteTexture(IntPtr UPtr, int Image);

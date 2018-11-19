@@ -187,6 +187,11 @@ namespace NanoVG {
 		[DllImport(LibName, CallingConvention = CConv, EntryPoint = FuncPrefix + nameof(CreateImage))]
 		public static extern int CreateImage(this NanoVGContext Ctx, byte[] filename, int imageFlags);
 
+        public static int CreateImage(this NanoVGContext ctx, string fileName, int imageFlats)
+        {
+            return CreateImage(ctx, StrToUTF8(fileName), imageFlats);
+        }
+
 		[DllImport(LibName, CallingConvention = CConv, EntryPoint = FuncPrefix + nameof(CreateImageMem))]
 		public static extern int CreateImageMem(this NanoVGContext Ctx, int imageFlags, byte* data, int ndata);
 
@@ -316,20 +321,97 @@ namespace NanoVG {
 		[DllImport(LibName, CallingConvention = CConv, EntryPoint = FuncPrefix + nameof(TextBounds))]
 		public static extern float TextBounds(this NanoVGContext Ctx, float x, float y, byte[] Str, byte[] end, float* bounds);
 
-		[DllImport(LibName, CallingConvention = CConv, EntryPoint = FuncPrefix + nameof(TextBoxBounds))]
+        [DllImport(LibName, CallingConvention = CConv, EntryPoint = FuncPrefix + nameof(TextBounds))]
+        public static extern float TextBounds(this NanoVGContext Ctx, float x, float y, byte[] Str, byte[] end, IntPtr bounds);
+
+
+        [DllImport(LibName, CallingConvention = CConv, EntryPoint = FuncPrefix + nameof(TextBoxBounds))]
 		public static extern void TextBoxBounds(this NanoVGContext Ctx, float x, float y, float breakRowWidth, byte[] Str, byte[] end, float* bounds);
 
-		[DllImport(LibName, CallingConvention = CConv, EntryPoint = FuncPrefix + nameof(TextGlyphPositions))]
-		public static extern int TextGlyphPositions(this NanoVGContext Ctx, float x, float y, byte[] Str, byte[] end, /* NVGglyphPosition* */ IntPtr positions, int maxPositions);
+        [DllImport(LibName, CallingConvention = CConv, EntryPoint = FuncPrefix + nameof(TextBoxBounds))]
+        public static extern void TextBoxBounds(this NanoVGContext Ctx, float x, float y, float breakRowWidth, byte[] Str, byte[] end, IntPtr bounds);
+
+
+        [DllImport(LibName, CallingConvention = CConv, EntryPoint = FuncPrefix + nameof(TextGlyphPositions))]
+		public static extern int TextGlyphPositions(this NanoVGContext Ctx, float x, float y, byte[] Str, byte[] end, /* NVGglyphPosition* */IntPtr positions, int maxPositions);
 
 		[DllImport(LibName, CallingConvention = CConv, EntryPoint = FuncPrefix + nameof(TextMetrics))]
 		public static extern void TextMetrics(this NanoVGContext Ctx, float* ascender, float* descender, float* lineh);
 
 		[DllImport(LibName, CallingConvention = CConv, EntryPoint = FuncPrefix + nameof(TextBreakLines))]
-		public static extern int TextBreakLines(this NanoVGContext Ctx, byte[] Str, byte[] end, float breakRowWidth, /*NVGtextRow* */ IntPtr rows, int maxRows);
+		public static extern int TextBreakLines(this NanoVGContext Ctx, byte[] Str, byte[] end, float breakRowWidth, IntPtr rows, int maxRows);
 
-		#endregion
-	}
+        #endregion
+
+        public static IntPtr GetIntPtrFromStructArray<T>(T[] array) where T : new()
+        {
+            int arrayLen = array.Length;
+            int structSize = Marshal.SizeOf(typeof(T));
+            IntPtr ptr = Marshal.AllocCoTaskMem(arrayLen * structSize);
+            for (int i = 0; i < arrayLen; i++)
+                Marshal.StructureToPtr(array[i], (IntPtr)(ptr.ToInt64() + i * structSize), false);
+            return ptr;
+        }
+
+        public static T[] GetStructArrayFromIntPtr<T>(IntPtr ptr, int len) where T : new()
+        {
+            T[] array = new T[len];
+            int structSize = Marshal.SizeOf(typeof(T));
+            IntPtr ptrPos = ptr;
+            for (int i = 0; i < len; i++)
+            {
+                array[i] = new T();
+                Marshal.PtrToStructure<T>(ptrPos);
+                Marshal.DestroyStructure(ptrPos, typeof(T));
+                ptrPos = (IntPtr)(ptrPos.ToInt64() + structSize);
+            }
+            Marshal.FreeCoTaskMem(ptr);
+            return array;
+        }
+
+
+        public static IntPtr MarshalToPointer(object data)
+        {
+            IntPtr buf = Marshal.AllocHGlobal(Marshal.SizeOf(data));
+            Marshal.StructureToPtr(data,buf, false);
+            return buf;
+        }
+
+        public static IntPtr MarshalArrayToPointer<T>(T[] items)
+        {
+            IntPtr dummy;
+
+            int totalLength = 0;
+            foreach (T item in items)
+            {
+                totalLength += Marshal.SizeOf(item);
+            }
+
+            dummy = Marshal.AllocHGlobal(totalLength);
+
+            int start = 0;
+            byte[] data = new byte[totalLength];   //prepare to get the whole items array to this bytes array
+            foreach (T item in items)
+            {
+                int length = Marshal.SizeOf(item);
+                IntPtr ptr = Marshal.AllocHGlobal(length);
+                Marshal.StructureToPtr(item, ptr, false);
+
+                Marshal.Copy(ptr, data, start, length);
+                start += length;
+
+                Marshal.FreeHGlobal(ptr);
+            }
+            Marshal.Copy(data, 0, dummy, totalLength);
+
+            return dummy;
+        }
+
+        public static byte[] StrToByte(string text)
+        {
+            return Encoding.UTF8.GetBytes(text);
+        }
+    }
 
 	public static unsafe partial class NVG {
 		[DllImport("kernel32")]
